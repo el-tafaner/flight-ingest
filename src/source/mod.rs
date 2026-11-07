@@ -4,6 +4,7 @@ use crate::domain::FlightState;
 use crate::error::IngestError;
 
 pub mod opensky;
+pub mod opensky_client;
 
 /// One reading of the sky: when it was taken and which states were parsed.
 #[derive(Debug, Clone, PartialEq)]
@@ -12,6 +13,8 @@ pub struct Snapshot {
     pub states: Vec<FlightState>,
     /// Records that could not be parsed, kept instead of dropped silently.
     pub skipped: Vec<IngestError>,
+    /// API credits left after this reading, when the server reports them.
+    pub credits_remaining: Option<u32>,
 }
 
 /// Anything that can produce snapshots of the sky.
@@ -36,6 +39,7 @@ mod tests {
                 time_unix: self.time_unix,
                 states: Vec::new(),
                 skipped: Vec::new(),
+                credits_remaining: None,
             })
         }
     }

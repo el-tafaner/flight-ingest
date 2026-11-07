@@ -29,8 +29,9 @@ Cada hito tiene su tag de Git y su nota. Para ver el proyecto tal como estaba en
 | `v0.2` | `Position`, `FlightState` y `Option` | [v0.2: FlightState](docs/es/fases/v0.2-flightstate.md) |
 | `v0.3` | Errores con `thiserror` y validación | [v0.3: validación](docs/es/fases/v0.3-validacion.md) |
 | `v0.4` | `FlightSource` y parser de OpenSky | [v0.4: fuente y parser](docs/es/fases/v0.4-fuente-y-parser.md) |
-| `v0.5` | Cliente HTTP con OAuth2 y límites de créditos | próximamente |
-| `v0.6` | Polling con presupuesto de créditos | próximamente |
+| `v0.5` | Cliente HTTP anónimo de OpenSky y créditos | [v0.5: cliente HTTP](docs/es/fases/v0.5-cliente-http.md) |
+| `v0.6` | Autenticación OAuth2 | próximamente |
+| `v0.7` | Polling con presupuesto de créditos | próximamente |
 
 Las decisiones importantes están en [`docs/es/adr/`](docs/es/adr/), incluida la de por qué Rust ([ADR 0001](docs/es/adr/0001-rust-como-lenguaje.md)): para aprender el lenguaje.
 

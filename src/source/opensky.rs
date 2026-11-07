@@ -111,6 +111,7 @@ pub fn parse_response(json: &str) -> Result<Snapshot, IngestError> {
         time_unix: response.time,
         states,
         skipped,
+        credits_remaining: None,
     })
 }
 
