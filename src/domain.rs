@@ -1,9 +1,15 @@
+use thiserror::Error;
+
+use crate::error::IngestError;
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Icao24(String);
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Error)]
 pub enum Icao24Error {
+    #[error("ICAO24 must have 6 characters, got {0}")]
     InvalidLength(usize),
+    #[error("ICAO24 must contain only hexadecimal digits")]
     NotHex,
 }
 
@@ -29,9 +35,11 @@ pub struct Position {
     lon: f64,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Error)]
 pub enum PositionError {
+    #[error("latitude must be between -90 and 90")]
     LatitudeOutOfRange,
+    #[error("longitude must be between -180 and 180")]
     LongitudeOutOfRange,
 }
 
@@ -76,6 +84,22 @@ impl FlightState {
             .map(str::trim)
             .filter(|s| !s.is_empty())
     }
+}
+
+/// Parses the identity fields of a raw record.
+///
+/// A preview of the v0.4 parser: it shows how `?` converts errors.
+pub fn parse_identity(
+    icao24: &str,
+    lat: Option<f64>,
+    lon: Option<f64>,
+) -> Result<(Icao24, Option<Position>), IngestError> {
+    let icao24 = Icao24::parse(icao24)?;
+    let position = match (lat, lon) {
+        (Some(lat), Some(lon)) => Some(Position::new(lat, lon)?),
+        _ => None,
+    };
+    Ok((icao24, position))
 }
 
 #[cfg(test)]
@@ -145,5 +169,32 @@ mod tests {
     fn callsign_trimmed_is_none_when_blank_or_missing() {
         assert_eq!(sample_state(Some("   ")).callsign_trimmed(), None);
         assert_eq!(sample_state(None).callsign_trimmed(), None);
+    }
+
+    #[test]
+    fn parse_identity_converts_errors_with_question_mark() {
+        assert_eq!(
+            parse_identity("xyz", None, None),
+            Err(IngestError::Icao24(Icao24Error::InvalidLength(3)))
+        );
+        assert_eq!(
+            parse_identity("4840d6", Some(95.0), Some(2.0)),
+            Err(IngestError::Position(PositionError::LatitudeOutOfRange))
+        );
+    }
+
+    #[test]
+    fn parse_identity_without_coordinates_has_no_position() {
+        let (id, pos) = parse_identity("4840d6", None, Some(2.0)).unwrap();
+        assert_eq!(id.as_str(), "4840d6");
+        assert!(pos.is_none());
+    }
+
+    #[test]
+    fn errors_have_readable_messages() {
+        assert_eq!(
+            Icao24Error::InvalidLength(4).to_string(),
+            "ICAO24 must have 6 characters, got 4"
+        );
     }
 }
