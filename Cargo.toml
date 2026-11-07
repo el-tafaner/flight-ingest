@@ -1,6 +1,6 @@
 [package]
 name = "flight-ingest"
-version = "0.1.0"
+version = "0.4.0"
 edition = "2024"
 rust-version = "1.88"
 description = "Fetch and validate real-time flight data"
@@ -8,4 +8,9 @@ license = "MIT"
 repository = "https://github.com/el-tafaner/flight-ingest"
 
 [dependencies]
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
 thiserror = "2.0.21"
+
+[dev-dependencies]
+tokio = { version = "1.54.1", features = ["rt", "macros"] }

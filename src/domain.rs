@@ -5,7 +5,7 @@ use crate::error::IngestError;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Icao24(String);
 
-#[derive(Debug, PartialEq, Eq, Error)]
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum Icao24Error {
     #[error("ICAO24 must have 6 characters, got {0}")]
     InvalidLength(usize),
@@ -35,7 +35,7 @@ pub struct Position {
     lon: f64,
 }
 
-#[derive(Debug, PartialEq, Eq, Error)]
+#[derive(Debug, Clone, PartialEq, Eq, Error)]
 pub enum PositionError {
     #[error("latitude must be between -90 and 90")]
     LatitudeOutOfRange,
