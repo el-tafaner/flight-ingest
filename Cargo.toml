@@ -2,6 +2,10 @@
 name = "flight-ingest"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.88"
+description = "Fetch and validate real-time flight data"
+license = "MIT"
+repository = "https://github.com/el-tafaner/flight-ingest"
 
 [dependencies]
 thiserror = "2.0.21"
